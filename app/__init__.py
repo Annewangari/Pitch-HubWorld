@@ -13,23 +13,23 @@ def create_app(config_name):
     # Creating the app configurations
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://blankphrase:password@localhost/pitch'
+
    # Creating the app configurations
+
     # app.config.from_object(config_options[config_name])
     # config_options[config_name].init_app(app)
+    app.config.from_object(config_options[config_name])
+    config_options[config_name].init_app(app)
+
     # Initializing flask extensions
     bootstrap.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
-
     # Registering the blueprint
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
-
     from .auth import auth as auth_blueprint
-    app.register_blueprint(auth_blueprint, url_prefix='/authenticate')
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
-
     from .requests import configure_request
     configure_request(app)
-
     return app
